@@ -84,3 +84,49 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateClock, 1000);
     updateClock();
 });
+// Paint Logic
+const canvas = document.getElementById('paintCanvas');
+if (canvas) {
+    const ctx = canvas.getContext('2d');
+    let painting = false;
+
+    function startPosition(e) {
+        painting = true;
+        draw(e);
+    }
+
+    function finishedPosition() {
+        painting = false;
+        ctx.beginPath();
+    }
+
+    function draw(e) {
+        if (!painting) return;
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = 'black';
+
+        // Support for both Mouse and Touch
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.clientX || (e.touches ? e.touches[0].clientX : 0);
+        const clientY = e.clientY || (e.touches ? e.touches[0].clientY : 0);
+
+        ctx.lineTo(clientX - rect.left, clientY - rect.top);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(clientX - rect.left, clientY - rect.top);
+    }
+
+    canvas.addEventListener('mousedown', startPosition);
+    canvas.addEventListener('touchstart', (e) => { e.preventDefault(); startPosition(e); });
+    canvas.addEventListener('mouseup', finishedPosition);
+    canvas.addEventListener('touchend', finishedPosition);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e); });
+}
+
+function clearCanvas() {
+    const canvas = document.getElementById('paintCanvas');
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
