@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Retro OS Portfolio</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -12,11 +12,11 @@
     <div class="icon-container">
         <div class="desktop-icon" onclick="openWindow('about-window')">
             <img src="assets/icons/my-computer.png" alt="About">
-            <span>About Me</span>
+            <span>About Me.txt</span>
         </div>
         <div class="desktop-icon" onclick="openWindow('projects-window')">
             <img src="assets/icons/folder.png" alt="Projects">
-            <span>Projects</span>
+            <span>My Projects</span>
         </div>
         <div class="desktop-icon" onclick="openWindow('art-window')">
             <img src="assets/icons/paint.png" alt="Art">
@@ -24,31 +24,56 @@
         </div>
     </div>
 
-    <div id="art-window" class="window draggable" style="display:none; width: 450px; height: 350px;">
+    <div id="about-window" class="window" style="display:none; width: 320px; top: 50px; left: 50px;">
         <div class="window-header">
-            <div class="header-title">untitled - Paint</div>
+            <div class="header-title">About Me.txt</div>
             <div class="window-controls">
-                <button class="win-btn">_</button>
-                <button class="win-btn">□</button>
-                <button class="win-btn close" onclick="closeWindow('art-window')">X</button>
+                <button class="win-btn" onclick="closeWindow('about-window')">X</button>
             </div>
         </div>
         <div class="window-body">
-             <div class="paint-toolbar"></div>
-            <div class="canvas-area"></div>
+            <h3>User Profile</h3>
+            <p>IT Enthusiast & Digital Artist.</p>
+            <p>Welcome to my 90s inspired workspace.</p>
+        </div>
+    </div>
+
+    <div id="art-window" class="window" style="display:none; width: 400px; top: 100px; left: 80px;">
+        <div class="window-header">
+            <div class="header-title">untitled - Paint</div>
+            <div class="window-controls">
+                <button class="win-btn" onclick="closeWindow('art-window')">X</button>
+            </div>
+        </div>
+        <div class="window-body">
+            <div class="gallery-grid">
+                <div class="art-placeholder">Art 1</div>
+                <div class="art-placeholder">Art 2</div>
+            </div>
         </div>
     </div>
 </div>
 
+<div id="start-menu" class="window">
+    <div class="start-menu-sidebar">
+        <span class="sidebar-text">Windows<b>2026</b></span>
+    </div>
+    <ul class="start-menu-list">
+        <li onclick="openWindow('about-window')">About Me</li>
+        <li onclick="openWindow('projects-window')">Projects</li>
+        <hr>
+        <li onclick="location.reload()">Shut Down...</li>
+    </ul>
+</div>
+
 <div id="taskbar">
-    <button id="start-button">
-        <img src="assets/icons/start-logo.png" alt="logo"> Start
+    <button id="start-button" onclick="toggleStartMenu()">
+        <strong>Start</strong>
     </button>
     <div class="taskbar-divider"></div>
     <div id="running-tasks"></div>
     <div class="system-tray">
-        <img src="assets/icons/vol.png" class="tray-icon">
-        <span id="clock"></span>
+        <span id="clock">12:00 PM</span>
     </div>
 </div>
 
