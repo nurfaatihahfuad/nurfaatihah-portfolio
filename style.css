@@ -1,63 +1,205 @@
+/* --- Core OS Variables --- */
 :root {
     --win-gray: #c0c0c0;
-    --win-blue-title: #000080;
-    --win-border-light: #ffffff;
-    --win-border-dark: #808080;
+    --win-white: #ffffff;
+    --win-dark: #808080;
+    --win-black: #000000;
+    --win-blue-active: #000080;
+    --win-blue-gradient: linear-gradient(90deg, #000080, #1084d0);
 }
 
-body {
-    background-image: url('assets/images/bliss-bg.jpg'); /* The green hill wallpaper from image 2 */
-    background-size: cover;
-    background-position: center;
-    overflow: hidden;
-    height: 100vh;
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent; /* Clean touch on mobile */
+}
+
+body, html {
     margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'MS Sans Serif', Tahoma, sans-serif;
+    /* Use the Bliss background image for that classic feel */
+    background: #008080 url('https://i.imgur.com/Zk6yr0B.jpg') no-repeat center center fixed;
+    background-size: cover;
+    overflow: hidden; /* Prevents body scroll */
 }
 
-/* Window styling from image 1 */
-.window {
-    background: var(--win-gray);
-    border: 2px solid;
-    border-color: var(--win-border-light) var(--win-border-dark) var(--win-border-dark) var(--win-border-light);
-    box-shadow: 1px 1px 0px black;
-    position: absolute;
+/* --- Desktop & Icons --- */
+#desktop {
+    height: calc(100vh - 35px);
+    width: 100vw;
+    position: relative;
+    padding: 10px;
+}
+
+.icon-container {
     display: flex;
     flex-direction: column;
+    flex-wrap: wrap;
+    gap: 15px;
+    height: 100%;
+    width: fit-content;
+}
+
+.desktop-icon {
+    width: 75px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid transparent; /* No outer border by default */
+    padding: 5px;
+}
+
+.desktop-icon img {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 4px;
+    pointer-events: none; /* Helps with click registration */
+}
+
+.desktop-icon span {
+    color: white;
+    font-size: 11px;
+    text-shadow: 1px 1px 1px black;
+    padding: 2px 4px;
+    word-break: break-word;
+}
+
+/* Selection state (When clicked) */
+.desktop-icon:active, .desktop-icon:focus {
+    background-color: rgba(0, 0, 128, 0.4);
+    border: 1px dotted white;
+}
+
+/* --- Window System --- */
+.window {
+    position: absolute;
+    background: var(--win-gray);
+    border: 2px solid;
+    border-color: var(--win-white) var(--win-dark) var(--win-dark) var(--win-white);
+    box-shadow: 1px 1px 0 0 var(--win-black);
+    display: flex;
+    flex-direction: column;
+    min-width: 250px;
 }
 
 .window-header {
-    background: linear-gradient(90deg, var(--win-blue-title), #1084d0);
-    padding: 3px 6px;
+    background: var(--win-dark); /* Inactive color */
+    color: #d9d9d9;
+    padding: 3px 5px;
     display: flex;
     justify-content: space-between;
-    color: white;
+    align-items: center;
     font-weight: bold;
-    cursor: grab;
+    font-size: 12px;
+}
+
+/* Active Window Header (Focused) */
+.active-window .window-header {
+    background: var(--win-blue-gradient);
+    color: white;
 }
 
 .window-body {
-    margin: 4px;
-    border: 2px inset white;
     background: white;
+    margin: 2px;
+    border: 2px inset var(--win-white);
+    padding: 10px;
+    overflow: auto;
     flex-grow: 1;
 }
 
-/* Taskbar styling */
+.window-controls button {
+    width: 16px;
+    height: 14px;
+    font-size: 9px;
+    padding: 0;
+    margin-left: 2px;
+    background: var(--win-gray);
+    border: 2px solid;
+    border-color: var(--win-white) var(--win-dark) var(--win-dark) var(--win-white);
+    cursor: pointer;
+}
+
+/* --- Taskbar --- */
 #taskbar {
     position: fixed;
     bottom: 0;
     width: 100%;
-    height: 30px;
+    height: 35px;
     background: var(--win-gray);
-    border-top: 2px solid white;
+    border-top: 2px solid var(--win-white);
     display: flex;
     align-items: center;
     padding: 2px;
+    z-index: 9999;
 }
 
 #start-button {
     font-weight: bold;
-    height: 24px;
-    box-shadow: inset 1.5px 1.5px white, 1.5px 1.5px black;
-    border: 1px solid var(--win-border-dark);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    height: 26px;
+    padding: 2px 6px;
+    border: 2px solid;
+    border-color: var(--win-white) var(--win-dark) var(--win-dark) var(--win-white);
+    background: var(--win-gray);
+}
+
+#running-tasks {
+    display: flex;
+    flex-grow: 1;
+    margin: 0 5px;
+    overflow: hidden;
+}
+
+.taskbar-item {
+    height: 26px;
+    min-width: 80px;
+    max-width: 150px;
+    font-size: 11px;
+    text-align: left;
+    margin-right: 3px;
+    background: var(--win-gray);
+    border: 2px solid;
+    border-color: var(--win-white) var(--win-dark) var(--win-dark) var(--win-white);
+}
+
+.taskbar-item.pressed {
+    border-color: var(--win-dark) var(--win-white) var(--win-white) var(--win-dark);
+    background: #e6e6e6;
+    padding-top: 3px; /* Inset effect */
+}
+
+#clock {
+    padding: 0 10px;
+    border-left: 2px inset var(--win-dark);
+    font-size: 12px;
+}
+
+/* --- Mobile Specific Overrides --- */
+@media (max-width: 600px) {
+    .desktop-icon {
+        width: 65px;
+    }
+    
+    .desktop-icon img {
+        width: 40px; /* Larger icons for finger taps */
+        height: 40px;
+    }
+
+    .window {
+        width: 92% !important;
+        left: 4% !important;
+        top: 50px !important;
+        max-height: 80vh;
+    }
+
+    .taskbar-item {
+        min-width: 50px;
+        font-size: 10px;
+    }
 }
