@@ -3,47 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retro Portfolio - Windows 98 Edition</title>
+    <title>Retro OS Portfolio</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div id="desktop">
-    <div class="icon" onclick="openWindow('about')">
-        <img src="https://bit.ly/3Ym8P6J" alt="About Me">
-        <span>About Me.txt</span>
-    </div>
-    <div class="icon" onclick="openWindow('projects')">
-        <img src="https://bit.ly/3XvLz0S" alt="Projects">
-        <span>My_Projects</span>
-    </div>
-    <div class="icon" onclick="openWindow('art')">
-        <img src="https://bit.ly/3Ym96Xp" alt="Art">
-        <span>Art_Gallery</span>
+    <div class="icon-container">
+        <div class="desktop-icon" onclick="openWindow('about-window')">
+            <img src="assets/icons/my-computer.png" alt="About">
+            <span>About Me</span>
+        </div>
+        <div class="desktop-icon" onclick="openWindow('projects-window')">
+            <img src="assets/icons/folder.png" alt="Projects">
+            <span>Projects</span>
+        </div>
+        <div class="desktop-icon" onclick="openWindow('art-window')">
+            <img src="assets/icons/paint.png" alt="Art">
+            <span>Portfolio.exe</span>
+        </div>
     </div>
 
-    <div id="about" class="window" style="display:none;">
+    <div id="art-window" class="window draggable" style="display:none; width: 450px; height: 350px;">
         <div class="window-header">
-            <span class="title">About Me.txt</span>
+            <div class="header-title">untitled - Paint</div>
             <div class="window-controls">
-                <button onclick="closeWindow('about')">X</button>
+                <button class="win-btn">_</button>
+                <button class="win-btn">□</button>
+                <button class="win-btn close" onclick="closeWindow('art-window')">X</button>
             </div>
         </div>
         <div class="window-body">
-            <h3>Hello, I'm [Your Name]</h3>
-            <p>A fusion of IT logic and artistic chaos.</p>
-            <hr>
-            <p><b>Skills:</b> JavaScript, React, Digital Illustration, UI Design.</p>
+             <div class="paint-toolbar"></div>
+            <div class="canvas-area"></div>
         </div>
     </div>
 </div>
 
 <div id="taskbar">
-    <button id="start-btn">
-        <img src="https://bit.ly/3Ym8P6J" width="16"> Start
+    <button id="start-button">
+        <img src="assets/icons/start-logo.png" alt="logo"> Start
     </button>
-    <div id="active-apps"></div>
-    <div id="clock">12:00 PM</div>
+    <div class="taskbar-divider"></div>
+    <div id="running-tasks"></div>
+    <div class="system-tray">
+        <img src="assets/icons/vol.png" class="tray-icon">
+        <span id="clock"></span>
+    </div>
 </div>
 
 <script src="script.js"></script>
