@@ -1,5 +1,6 @@
 /**
  * WINDOWS 98 / XP PORTFOLIO ENGINE
+ * Full Update: Layering, Taskbar, and Mobile Touch Support
  */
 
 // --- Global State ---
@@ -9,20 +10,20 @@ let highestZ = 100;
 document.addEventListener('DOMContentLoaded', () => {
     updateClock();
     setInterval(updateClock, 1000);
-    setupDraggables();
+    setupInteractions();
+    updateTaskbar(); // Initialize empty taskbar
 });
 
 // --- Window Management ---
 
 /**
  * Opens a window and creates a taskbar presence
- * @param {string} id - The HTML ID of the window to show
  */
 function openWindow(id) {
     const win = document.getElementById(id);
     if (!win) return;
 
-    win.style.display = 'flex'; // Use flex to maintain internal UI structure
+    win.style.display = 'flex'; 
     bringToFront(win);
     updateTaskbar();
 }
@@ -39,51 +40,40 @@ function closeWindow(id) {
 }
 
 /**
- * Layering Logic: Updates Z-index so the clicked window is always on top
+ * Updates Z-index so the clicked window is always on top
  */
 function bringToFront(win) {
     highestZ++;
     win.style.zIndex = highestZ;
     
-    // Visual focus state: highlight the title bar of the active window
+    // Visual focus state
     document.querySelectorAll('.window').forEach(w => w.classList.remove('active-window'));
     win.classList.add('active-window');
+    
+    // Update taskbar to show which one is pressed
+    updateTaskbar();
 }
 
-// --- Taskbar & Start Menu ---
+// --- Taskbar Logic ---
 
-/**
- * Start Menu Toggle
- */
-function toggleStartMenu() {
-    const menu = document.getElementById('start-menu');
-    const isVisible = menu.style.display === 'block';
-    menu.style.display = isVisible ? 'none' : 'block';
-}
-
-/**
- * Dynamic Taskbar: Lists all currently open windows
- */
 function updateTaskbar() {
     const taskContainer = document.getElementById('running-tasks');
     if (!taskContainer) return;
     
-    taskContainer.innerHTML = ''; // Refresh the list
+    taskContainer.innerHTML = ''; 
 
     const windows = document.querySelectorAll('.window');
     windows.forEach(win => {
-        if (win.style.display !== 'none') {
+        if (win.style.display !== 'none' && win.style.display !== '') {
             const taskButton = document.createElement('button');
             taskButton.className = 'taskbar-item';
             
-            // Extract the title text from the window's header
+            // Get title from the header
             const title = win.querySelector('.header-title').innerText;
             taskButton.innerText = title;
             
-            // Interaction: Clicking taskbar item brings that window to front
             taskButton.onclick = () => bringToFront(win);
             
-            // If window is the active one, style the taskbar button as "pressed"
             if (win.classList.contains('active-window')) {
                 taskButton.classList.add('pressed');
             }
@@ -93,18 +83,18 @@ function updateTaskbar() {
     });
 }
 
-// --- Dragging Logic ---
+// --- Interaction Logic (Mouse & Touch) ---
 
-function setupDraggables() {
+function setupInteractions() {
     document.querySelectorAll('.window-header').forEach(header => {
+        
+        // 1. MOUSE DRAGGING
         header.onmousedown = function(event) {
-            // Don't drag if clicking buttons (X, _, etc)
             if (event.target.closest('.window-controls')) return;
 
             const win = header.parentElement;
             bringToFront(win);
 
-            // Calculate offset so cursor stays in the same spot on the header
             let shiftX = event.clientX - win.getBoundingClientRect().left;
             let shiftY = event.clientY - win.getBoundingClientRect().top;
 
@@ -113,20 +103,46 @@ function setupDraggables() {
                 win.style.top = pageY - shiftY + 'px';
             }
 
-            function onMouseMove(event) {
-                moveAt(event.pageX, event.pageY);
-            }
+            function onMouseMove(e) { moveAt(e.pageX, e.pageY); }
 
-            // Bind to document to prevent losing window when dragging fast
             document.addEventListener('mousemove', onMouseMove);
-
             document.onmouseup = function() {
                 document.removeEventListener('mousemove', onMouseMove);
                 document.onmouseup = null;
             };
         };
 
-        header.ondragstart = () => false; // Disable native browser dragging
+        // 2. MOBILE TOUCH DRAGGING
+        header.ontouchstart = function(event) {
+            if (event.target.closest('.window-controls')) return;
+
+            const win = header.parentElement;
+            bringToFront(win);
+
+            let touch = event.touches[0];
+            let shiftX = touch.clientX - win.getBoundingClientRect().left;
+            let shiftY = touch.clientY - win.getBoundingClientRect().top;
+
+            function moveAt(pageX, pageY) {
+                win.style.left = pageX - shiftX + 'px';
+                win.style.top = pageY - shiftY + 'px';
+            }
+
+            function onTouchMove(e) {
+                // Prevent scrolling the background while dragging
+                if (e.cancelable) e.preventDefault(); 
+                moveAt(e.touches[0].pageX, e.touches[0].pageY);
+            }
+
+            document.addEventListener('touchmove', onTouchMove, { passive: false });
+            
+            header.ontouchend = function() {
+                document.removeEventListener('touchmove', onTouchMove);
+                header.ontouchend = null;
+            };
+        };
+
+        header.ondragstart = () => false;
     });
 }
 
@@ -142,3 +158,11 @@ function updateClock() {
         });
     }
 }
+
+function toggleStartMenu() {
+    const menu = document.getElementById('start-menu');
+    if(menu) {
+        const isVisible = menu.style.display === 'block';
+        menu.style.display = isVisible ? 'none' : 'block';
+    }
+                }
