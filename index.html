@@ -2,112 +2,463 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Retro OS Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio - Windows 95</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Desktop Container -->
+    <div class="desktop">
+        <!-- Desktop Icons -->
+        <div class="desktop-icons">
+            <!-- About Me Icon -->
+            <div class="icon" data-window="about-window">
+                <div class="icon-image">
+                    <svg width="32" height="32" viewBox="0 0 32 32">
+                        <rect x="4" y="4" width="24" height="24" fill="#008080"/>
+                        <circle cx="16" cy="12" r="4" fill="#fff"/>
+                        <path d="M 10 20 Q 10 16 16 16 Q 22 16 22 20 L 22 24 L 10 24 Z" fill="#fff"/>
+                    </svg>
+                </div>
+                <div class="icon-label">About Me</div>
+            </div>
 
-<div id="desktop">
-    <div class="icon-container">
-        <div class="desktop-icon" onclick="openWindow('about-window')">
-            <img src="assets/icons/my-computer.png" alt="About">
-            <span>About Me.txt</span>
-        </div>
-        <div class="desktop-icon" onclick="openWindow('projects-window')">
-            <img src="assets/icons/folder.png" alt="Projects">
-            <span>My Projects</span>
-        </div>
-        <div class="desktop-icon" onclick="openWindow('art-window')">
-            <img src="assets/icons/paint.png" alt="Art">
-            <span>Portfolio.exe</span>
-        </div>
-        <div id="music-window" class="window" style="display:none; width: 280px; top: 150px; left: 120px;">
-    <div class="window-header">
-        <div class="header-title">Winamp Player</div>
-        <div class="window-controls">
-            <button class="win-btn" onclick="closeWindow('music-window')">X</button>
-        </div>
-    </div>
-    <div class="window-body" style="background: #000; color: #00FF00; font-family: monospace;">
-        <div id="song-title">01. Portfolio_Beat.mp3</div>
-        <div style="display: flex; gap: 10px; margin-top: 10px;">
-            <button onclick="alert('Play')" style="background:#333; color:white;">Play</button>
-            <button onclick="alert('Stop')" style="background:#333; color:white;">Stop</button>
-        </div>
-        <div style="margin-top: 10px; border: 1px solid #00FF00; height: 10px; width: 100%;"></div>
-    </div>
-</div>
+            <!-- Projects Icon -->
+            <div class="icon" data-window="projects-window">
+                <div class="icon-image">
+                    <svg width="32" height="32" viewBox="0 0 32 32">
+                        <rect x="6" y="8" width="20" height="16" fill="#808080"/>
+                        <rect x="8" y="10" width="16" height="12" fill="#000080"/>
+                        <text x="16" y="18" fill="#00FF00" font-size="8" text-anchor="middle" font-family="monospace">&lt;/&gt;</text>
+                    </svg>
+                </div>
+                <div class="icon-label">Projects</div>
+            </div>
 
-<div id="paint-window" class="window" style="display:none; width: 400px; top: 80px; left: 200px;">
-    <div class="window-header">
-        <div class="header-title">untitled - Paint</div>
-        <div class="window-controls">
-            <button class="win-btn" onclick="closeWindow('paint-window')">X</button>
-        </div>
-    </div>
-    <div class="window-body" style="padding: 0; display: flex; flex-direction: column;">
-        <canvas id="paintCanvas" width="390" height="250" style="cursor: crosshair; background: white;"></canvas>
-        <div style="background: var(--win-gray); padding: 5px; border-top: 2px solid white;">
-            <button onclick="clearCanvas()" style="font-size: 10px;">Clear Image</button>
-        </div>
-    </div>
-</div>
-    </div>
+            <!-- Art Portfolio Icon -->
+            <div class="icon" data-window="art-window">
+                <div class="icon-image">
+                    <svg width="32" height="32" viewBox="0 0 32 32">
+                        <rect x="6" y="6" width="20" height="20" fill="#FFFF00"/>
+                        <rect x="8" y="8" width="16" height="16" fill="#FFFFFF"/>
+                        <rect x="10" y="10" width="5" height="5" fill="#FF0000"/>
+                        <rect x="17" y="10" width="5" height="5" fill="#00FF00"/>
+                        <rect x="10" y="17" width="5" height="5" fill="#0000FF"/>
+                        <rect x="17" y="17" width="5" height="5" fill="#FF00FF"/>
+                    </svg>
+                </div>
+                <div class="icon-label">Art Gallery</div>
+            </div>
 
-    <div id="about-window" class="window" style="display:none; width: 320px; top: 50px; left: 50px;">
-        <div class="window-header">
-            <div class="header-title">About Me.txt</div>
-            <div class="window-controls">
-                <button class="win-btn" onclick="closeWindow('about-window')">X</button>
+            <!-- Resume Icon -->
+            <div class="icon" data-window="resume-window">
+                <div class="icon-image">
+                    <svg width="32" height="32" viewBox="0 0 32 32">
+                        <rect x="8" y="4" width="16" height="24" fill="#FFFFFF" stroke="#000" stroke-width="1"/>
+                        <line x1="10" y1="8" x2="22" y2="8" stroke="#000" stroke-width="1"/>
+                        <line x1="10" y1="12" x2="22" y2="12" stroke="#000" stroke-width="1"/>
+                        <line x1="10" y1="16" x2="22" y2="16" stroke="#000" stroke-width="1"/>
+                        <line x1="10" y1="20" x2="18" y2="20" stroke="#000" stroke-width="1"/>
+                    </svg>
+                </div>
+                <div class="icon-label">Resume</div>
+            </div>
+
+            <!-- Contact Icon -->
+            <div class="icon" data-window="contact-window">
+                <div class="icon-image">
+                    <svg width="32" height="32" viewBox="0 0 32 32">
+                        <rect x="4" y="10" width="24" height="14" fill="#C0C0C0" stroke="#000" stroke-width="1"/>
+                        <polygon points="4,10 16,18 28,10" fill="#FFFF00" stroke="#000" stroke-width="1"/>
+                    </svg>
+                </div>
+                <div class="icon-label">Contact</div>
+            </div>
+
+            <!-- Fun Extras Icon -->
+            <div class="icon" data-window="fun-window">
+                <div class="icon-image">
+                    <svg width="32" height="32" viewBox="0 0 32 32">
+                        <circle cx="16" cy="16" r="12" fill="#FFFF00" stroke="#000" stroke-width="1"/>
+                        <circle cx="12" cy="13" r="2" fill="#000"/>
+                        <circle cx="20" cy="13" r="2" fill="#000"/>
+                        <path d="M 10 19 Q 16 24 22 19" stroke="#000" stroke-width="2" fill="none"/>
+                    </svg>
+                </div>
+                <div class="icon-label">Fun Stuff</div>
             </div>
         </div>
-        <div class="window-body">
-            <h3>User Profile</h3>
-            <p>IT Enthusiast & Digital Artist.</p>
-            <p>Welcome to my 90s inspired workspace.</p>
-        </div>
-    </div>
 
-    <div id="art-window" class="window" style="display:none; width: 400px; top: 100px; left: 80px;">
-        <div class="window-header">
-            <div class="header-title">untitled - Paint</div>
-            <div class="window-controls">
-                <button class="win-btn" onclick="closeWindow('art-window')">X</button>
+        <!-- Windows -->
+        <!-- About Me Window -->
+        <div class="window" id="about-window">
+            <div class="title-bar">
+                <div class="title-bar-text">About Me</div>
+                <div class="title-bar-controls">
+                    <button class="minimize-btn" aria-label="Minimize">_</button>
+                    <button class="maximize-btn" aria-label="Maximize">□</button>
+                    <button class="close-btn" aria-label="Close">×</button>
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="typing-text">
+                    <h2>Hi, I'm [Your Name] 👋</h2>
+                    <p>Welcome to my digital playground where technology meets creativity!</p>
+                    
+                    <h3>About Me</h3>
+                    <p>I'm a passionate developer and artist who loves bridging the gap between code and design. 
+                    By day, I write elegant code; by night, I create pixel art and digital illustrations.</p>
+                    
+                    <h3>Education</h3>
+                    <ul>
+                        <li>🎓 Bachelor's in Computer Science - University Name (Year)</li>
+                        <li>🎨 Self-taught Digital Artist</li>
+                    </ul>
+                    
+                    <h3>Skills</h3>
+                    <div class="skill-bars">
+                        <div class="skill">
+                            <span>JavaScript</span>
+                            <div class="progress-bar"><div class="progress" style="width: 90%"></div></div>
+                        </div>
+                        <div class="skill">
+                            <span>Python</span>
+                            <div class="progress-bar"><div class="progress" style="width: 85%"></div></div>
+                        </div>
+                        <div class="skill">
+                            <span>HTML/CSS</span>
+                            <div class="progress-bar"><div class="progress" style="width: 95%"></div></div>
+                        </div>
+                        <div class="skill">
+                            <span>Digital Art</span>
+                            <div class="progress-bar"><div class="progress" style="width: 80%"></div></div>
+                        </div>
+                        <div class="skill">
+                            <span>UI/UX Design</span>
+                            <div class="progress-bar"><div class="progress" style="width: 75%"></div></div>
+                        </div>
+                    </div>
+                    
+                    <h3>Interests</h3>
+                    <p>💻 Web Development • 🎮 Game Development • 🎨 Digital Art • 🖼️ UI Design • 🕹️ Retro Computing</p>
+                </div>
             </div>
         </div>
-        <div class="window-body">
-            <div class="gallery-grid">
-                <div class="art-placeholder">Art 1</div>
-                <div class="art-placeholder">Art 2</div>
+
+        <!-- Projects Window -->
+        <div class="window" id="projects-window">
+            <div class="title-bar">
+                <div class="title-bar-text">Projects</div>
+                <div class="title-bar-controls">
+                    <button class="minimize-btn" aria-label="Minimize">_</button>
+                    <button class="maximize-btn" aria-label="Maximize">□</button>
+                    <button class="close-btn" aria-label="Close">×</button>
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="project-grid">
+                    <!-- Project 1 -->
+                    <div class="project-card">
+                        <div class="project-icon">🎮</div>
+                        <h3>Retro Snake Game</h3>
+                        <p>Classic snake game built with vanilla JavaScript and HTML5 Canvas.</p>
+                        <div class="project-tags">
+                            <span class="tag">JavaScript</span>
+                            <span class="tag">Canvas</span>
+                        </div>
+                        <a href="https://github.com/yourusername/snake-game" target="_blank" class="win95-button">View on GitHub</a>
+                    </div>
+
+                    <!-- Project 2 -->
+                    <div class="project-card">
+                        <div class="project-icon">🌐</div>
+                        <h3>Portfolio CMS</h3>
+                        <p>Content management system for artists to showcase their work.</p>
+                        <div class="project-tags">
+                            <span class="tag">React</span>
+                            <span class="tag">Node.js</span>
+                        </div>
+                        <a href="https://github.com/yourusername/portfolio-cms" target="_blank" class="win95-button">View on GitHub</a>
+                    </div>
+
+                    <!-- Project 3 -->
+                    <div class="project-card">
+                        <div class="project-icon">🤖</div>
+                        <h3>AI Chatbot</h3>
+                        <p>Conversational AI assistant with natural language processing.</p>
+                        <div class="project-tags">
+                            <span class="tag">Python</span>
+                            <span class="tag">TensorFlow</span>
+                        </div>
+                        <a href="https://github.com/yourusername/ai-chatbot" target="_blank" class="win95-button">View on GitHub</a>
+                    </div>
+
+                    <!-- Project 4 -->
+                    <div class="project-card">
+                        <div class="project-icon">📱</div>
+                        <h3>Weather App</h3>
+                        <p>Beautiful weather forecast app with real-time data.</p>
+                        <div class="project-tags">
+                            <span class="tag">Vue.js</span>
+                            <span class="tag">API</span>
+                        </div>
+                        <a href="https://github.com/yourusername/weather-app" target="_blank" class="win95-button">View on GitHub</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Art Portfolio Window -->
+        <div class="window" id="art-window">
+            <div class="title-bar">
+                <div class="title-bar-text">Art Gallery</div>
+                <div class="title-bar-controls">
+                    <button class="minimize-btn" aria-label="Minimize">_</button>
+                    <button class="maximize-btn" aria-label="Maximize">□</button>
+                    <button class="close-btn" aria-label="Close">×</button>
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="art-gallery">
+                    <div class="gallery-item">
+                        <div class="art-placeholder" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <span>Digital Art 1</span>
+                        </div>
+                        <p>Abstract Composition</p>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="art-placeholder" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                            <span>Digital Art 2</span>
+                        </div>
+                        <p>Character Design</p>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="art-placeholder" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                            <span>UI Design 1</span>
+                        </div>
+                        <p>Mobile App Interface</p>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="art-placeholder" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                            <span>Pixel Art</span>
+                        </div>
+                        <p>Retro Game Assets</p>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="art-placeholder" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                            <span>Illustration</span>
+                        </div>
+                        <p>Vector Artwork</p>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="art-placeholder" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
+                            <span>UI Design 2</span>
+                        </div>
+                        <p>Dashboard Concept</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resume Window -->
+        <div class="window" id="resume-window">
+            <div class="title-bar">
+                <div class="title-bar-text">Resume</div>
+                <div class="title-bar-controls">
+                    <button class="minimize-btn" aria-label="Minimize">_</button>
+                    <button class="maximize-btn" aria-label="Maximize">□</button>
+                    <button class="close-btn" aria-label="Close">×</button>
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="resume-content">
+                    <div class="download-section">
+                        <button class="win95-button download-btn" onclick="alert('CV download feature - link your PDF here!')">
+                            📄 Download CV (PDF)
+                        </button>
+                    </div>
+                    
+                    <h2>Experience</h2>
+                    <div class="resume-item">
+                        <h3>Senior Developer</h3>
+                        <p class="company">Tech Company Inc. • 2022 - Present</p>
+                        <ul>
+                            <li>Led development of major web applications</li>
+                            <li>Mentored junior developers</li>
+                            <li>Implemented CI/CD pipelines</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="resume-item">
+                        <h3>Full Stack Developer</h3>
+                        <p class="company">Startup Co. • 2020 - 2022</p>
+                        <ul>
+                            <li>Built responsive web applications</li>
+                            <li>Designed and implemented RESTful APIs</li>
+                            <li>Collaborated with design team</li>
+                        </ul>
+                    </div>
+
+                    <h2>Technical Skills</h2>
+                    <div class="skills-grid">
+                        <div class="skill-category">
+                            <h4>Frontend</h4>
+                            <p>HTML, CSS, JavaScript, React, Vue.js, TypeScript</p>
+                        </div>
+                        <div class="skill-category">
+                            <h4>Backend</h4>
+                            <p>Node.js, Python, Express, Django, REST APIs</p>
+                        </div>
+                        <div class="skill-category">
+                            <h4>Design</h4>
+                            <p>Figma, Adobe Creative Suite, UI/UX, Pixel Art</p>
+                        </div>
+                        <div class="skill-category">
+                            <h4>Tools</h4>
+                            <p>Git, Docker, VS Code, Webpack, npm</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Window -->
+        <div class="window" id="contact-window">
+            <div class="title-bar">
+                <div class="title-bar-text">Contact</div>
+                <div class="title-bar-controls">
+                    <button class="minimize-btn" aria-label="Minimize">_</button>
+                    <button class="maximize-btn" aria-label="Maximize">□</button>
+                    <button class="close-btn" aria-label="Close">×</button>
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="contact-content">
+                    <h2>Get In Touch</h2>
+                    <p>Let's create something amazing together!</p>
+                    
+                    <div class="contact-links">
+                        <a href="mailto:your.email@example.com" class="contact-link">
+                            <span class="contact-icon">📧</span>
+                            <span>your.email@example.com</span>
+                        </a>
+                        <a href="https://github.com/yourusername" target="_blank" class="contact-link">
+                            <span class="contact-icon">💻</span>
+                            <span>GitHub: @yourusername</span>
+                        </a>
+                        <a href="https://linkedin.com/in/yourusername" target="_blank" class="contact-link">
+                            <span class="contact-icon">💼</span>
+                            <span>LinkedIn: /in/yourusername</span>
+                        </a>
+                        <a href="https://twitter.com/yourusername" target="_blank" class="contact-link">
+                            <span class="contact-icon">🐦</span>
+                            <span>Twitter: @yourusername</span>
+                        </a>
+                    </div>
+
+                    <h3>Send a Message</h3>
+                    <form class="contact-form" onsubmit="handleContactSubmit(event)">
+                        <div class="form-group">
+                            <label>Name:</label>
+                            <input type="text" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email:</label>
+                            <input type="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Message:</label>
+                            <textarea name="message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="win95-button">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fun Extras Window -->
+        <div class="window" id="fun-window">
+            <div class="title-bar">
+                <div class="title-bar-text">Fun Stuff</div>
+                <div class="title-bar-controls">
+                    <button class="minimize-btn" aria-label="Minimize">_</button>
+                    <button class="maximize-btn" aria-label="Maximize">□</button>
+                    <button class="close-btn" aria-label="Close">×</button>
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="fun-content">
+                    <h2>Retro Fun Zone 🎮</h2>
+                    
+                    <!-- Mini Game -->
+                    <div class="mini-game">
+                        <h3>Click the Button!</h3>
+                        <p>Score: <span id="game-score">0</span></p>
+                        <button id="game-button" class="win95-button game-btn">Click Me!</button>
+                    </div>
+
+                    <!-- Sound Toggle -->
+                    <div class="sound-section">
+                        <h3>Windows 95 Sounds</h3>
+                        <button class="win95-button" onclick="playStartupSound()">🔊 Startup Sound</button>
+                        <button class="win95-button" onclick="playErrorSound()">⚠️ Error Sound</button>
+                    </div>
+
+                    <!-- Easter Egg -->
+                    <div class="easter-egg">
+                        <h3>Secret Message</h3>
+                        <p>Press Ctrl+Alt+Del for a surprise! (Just kidding 😄)</p>
+                        <div class="matrix-text" id="matrix"></div>
+                    </div>
+
+                    <!-- Quote Generator -->
+                    <div class="quote-section">
+                        <h3>Tech Quote of the Day</h3>
+                        <p id="tech-quote">"Any sufficiently advanced technology is indistinguishable from magic." - Arthur C. Clarke</p>
+                        <button class="win95-button" onclick="generateQuote()">New Quote</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div id="start-menu" class="window">
-    <div class="start-menu-sidebar">
-        <span class="sidebar-text">Windows<b>2026</b></span>
+    <!-- Taskbar -->
+    <div class="taskbar">
+        <button class="start-button" id="start-button">
+            <span class="start-icon">🪟</span>
+            <span>Start</span>
+        </button>
+        <div class="taskbar-items" id="taskbar-items"></div>
+        <div class="system-tray">
+            <span class="tray-icon" title="Volume">🔊</span>
+            <span class="tray-icon" title="Network">📡</span>
+            <span class="clock" id="clock">12:00 PM</span>
+        </div>
     </div>
-    <ul class="start-menu-list">
-        <li onclick="openWindow('about-window')">About Me</li>
-        <li onclick="openWindow('projects-window')">Projects</li>
-        <hr>
-        <li onclick="location.reload()">Shut Down...</li>
-    </ul>
-</div>
 
-<div id="taskbar">
-    <button id="start-button" onclick="toggleStartMenu()">
-        <strong>Start</strong>
-    </button>
-    <div class="taskbar-divider"></div>
-    <div id="running-tasks"></div>
-    <div class="system-tray">
-        <span id="clock">12:00 PM</span>
+    <!-- Start Menu -->
+    <div class="start-menu" id="start-menu">
+        <div class="start-menu-sidebar">
+            <div class="start-menu-title">Windows<span>95</span></div>
+        </div>
+        <div class="start-menu-items">
+            <div class="start-menu-item" onclick="alert('Portfolio v1.0 - Built with ❤️ in 2024')">
+                <span>📋</span> About This Site
+            </div>
+            <div class="start-menu-separator"></div>
+            <div class="start-menu-item" onclick="openAllWindows()">
+                <span>🗂️</span> Open All Windows
+            </div>
+            <div class="start-menu-item" onclick="closeAllWindows()">
+                <span>❌</span> Close All Windows
+            </div>
+            <div class="start-menu-separator"></div>
+            <div class="start-menu-item" onclick="alert('Thanks for visiting! 👋')">
+                <span>🔌</span> Shut Down...
+            </div>
+        </div>
     </div>
-</div>
 
-<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
