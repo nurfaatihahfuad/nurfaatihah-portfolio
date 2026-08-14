@@ -89,7 +89,7 @@
                         <path d="M 10 19 Q 16 24 22 19" stroke="#000" stroke-width="2" fill="none"/>
                     </svg>
                 </div>
-                <div class="icon-label">Fun Stuff</div>
+                <div class="icon-label">Playground</div>
             </div>
         </div>
 
@@ -373,48 +373,49 @@
         </div>
 
         <!-- Fun Extras Window -->
-        <div class="window" id="fun-window">
-            <div class="title-bar">
-                <div class="title-bar-text">Fun Stuff</div>
-                <div class="title-bar-controls">
-                    <button class="minimize-btn" aria-label="Minimize">_</button>
-                    <button class="maximize-btn" aria-label="Maximize">□</button>
-                    <button class="close-btn" aria-label="Close">×</button>
+         <div class="fun-content">
+            <!-- Tic Tac Toe -->
+            <div>
+                <h3>Tic-Tac-Toe</h3>
+                <div id="ttt-board" style="display:grid; grid-template-columns:repeat(3,60px); gap:4px; margin:10px 0;">
+                    <button class="ttt-cell win95-button" data-index="0" style="height:60px; font-size:24px;"></button>
+                    <button class="ttt-cell win95-button" data-index="1" style="height:60px; font-size:24px;"></button>
+                    <button class="ttt-cell win95-button" data-index="2" style="height:60px; font-size:24px;"></button>
+                    <button class="ttt-cell win95-button" data-index="3" style="height:60px; font-size:24px;"></button>
+                    <button class="ttt-cell win95-button" data-index="4" style="height:60px; font-size:24px;"></button>
+                    <button class="ttt-cell win95-button" data-index="5" style="height:60px; font-size:24px;"></button>
+                    <button class="ttt-cell win95-button" data-index="6" style="height:60px; font-size:24px;"></button>
+                    <button class="ttt-cell win95-button" data-index="7" style="height:60px; font-size:24px;"></button>
+                    <button class="ttt-cell win95-button" data-index="8" style="height:60px; font-size:24px;"></button>
                 </div>
+                <p id="ttt-status">Your turn (X)</p>
+                <button id="ttt-reset" class="win95-button">Reset Game</button>
             </div>
-            <div class="window-body">
-                <div class="fun-content">
-                    <h2>Retro Fun Zone 🎮</h2>
-                    
-                    <!-- Mini Game -->
-                    <div class="mini-game">
-                        <h3>Click the Button!</h3>
-                        <p>Score: <span id="game-score">0</span></p>
-                        <button id="game-button" class="win95-button game-btn">Click Me!</button>
-                    </div>
-
-                    <!-- Sound Toggle -->
-                    <div class="sound-section">
-                        <h3>Windows 95 Sounds</h3>
-                        <button class="win95-button" onclick="playStartupSound()">🔊 Startup Sound</button>
-                        <button class="win95-button" onclick="playErrorSound()">⚠️ Error Sound</button>
-                    </div>
-
-                    <!-- Easter Egg -->
-                    <div class="easter-egg">
-                        <h3>Secret Message</h3>
-                        <p>Press Ctrl+Alt+Del for a surprise! (Just kidding 😄)</p>
-                        <div class="matrix-text" id="matrix"></div>
-                    </div>
-
-                    <!-- Quote Generator -->
-                    <div class="quote-section">
-                        <h3>Tech Quote of the Day</h3>
-                        <p id="tech-quote">"Any sufficiently advanced technology is indistinguishable from magic." - Arthur C. Clarke</p>
-                        <button class="win95-button" onclick="generateQuote()">New Quote</button>
-                    </div>
+        
+            <!-- Typing Speed Test -->
+            <div>
+                <h3>Typing Speed Test</h3>
+                <p id="typing-sample" style="background:#fff; padding:8px; border:1px solid #808080;">The quick brown fox jumps over the lazy dog</p>
+                <textarea id="typing-input" rows="3" style="width:100%; font-family:inherit; padding:4px;" placeholder="Start typing here..."></textarea>
+                <p>WPM: <span id="wpm-result">0</span> | Accuracy: <span id="accuracy-result">100</span>%</p>
+                <button id="typing-reset" class="win95-button">Try Again</button>
+            </div>
+        
+            <!-- Retro Media Player -->
+            <div>
+                <h3>Retro Media Player</h3>
+                <div style="background:#000; color:#0f0; font-family:'Courier New',monospace; padding:8px; margin-bottom:8px;" id="media-display">
+                    No track selected
                 </div>
-            </div>
+                <select id="media-select" class="win95-button" style="width:100%; margin-bottom:8px;">
+                    <option value="">-- Select a track --</option>
+                    <option value="lofi1">Lofi Chill Beat</option>
+                    <option value="lofi2">Retro Synthwave</option>
+                    <option value="lofi3">Coding Vibes</option>
+                </select>
+                <button id="media-play" class="win95-button">▶ Play</button>
+                <button id="media-stop" class="win95-button">⏹ Stop</button>
+            </div>        
         </div>
     </div>
 
