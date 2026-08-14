@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeTaskbar();
     initializeStartMenu();
     updateClock();
-    initializeFunStuff();
 
     // Update clock every second
     setInterval(updateClock, 1000);
@@ -489,6 +488,7 @@ function initializeIconDragging() {
     });
 
     function startIconDrag(e) {
+         if (e.cancelable) e.preventDefault();
         draggedIcon = e.currentTarget;
         draggedIcon.classList.add('dragging');
 
