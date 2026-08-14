@@ -785,3 +785,40 @@ li {
 .window {
     animation: windowOpen 0.2s ease-out;
 }
+
+/* playgorund csss */
+.ttt-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ttt-cell:disabled {
+    cursor: not-allowed;
+}
+
+#typing-sample {
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.screensaver-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+    z-index: 5000;
+    display: none;
+    cursor: pointer;
+}
+
+.screensaver-logo {
+    position: absolute;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    font-size: 24px;
+    font-weight: bold;
+    white-space: nowrap;
+}
