@@ -28,29 +28,49 @@ document.addEventListener('DOMContentLoaded', () => {
 // ==========================================
 function initializeIcons() {
     const icons = document.querySelectorAll('.icon');
+    let lastTappedIcon = null;
+    let lastTapTime = 0;
 
     icons.forEach(icon => {
-        // Single click to select
+        // Desktop: single click to select
         icon.addEventListener('click', (e) => {
             e.stopPropagation();
             selectIcon(icon);
         });
 
-        // Double click / tap to open window
+        // Desktop: double click to open window
         icon.addEventListener('dblclick', (e) => {
             e.stopPropagation();
             const windowId = icon.getAttribute('data-window');
             if (windowId) openWindow(windowId);
         });
+
+        // Mobile: tap-tap (double tap) to open window
+        icon.addEventListener('touchend', (e) => {
+            const currentTime = new Date().getTime();
+            const tapGap = currentTime - lastTapTime;
+
+            if (lastTappedIcon === icon && tapGap < 400 && tapGap > 0) {
+                // Double-tap detected
+                e.preventDefault();
+                const windowId = icon.getAttribute('data-window');
+                if (windowId) openWindow(windowId);
+                lastTappedIcon = null;
+                lastTapTime = 0;
+            } else {
+                // Single tap - select
+                selectIcon(icon);
+                lastTappedIcon = icon;
+                lastTapTime = currentTime;
+            }
+        });
     });
 
-    // Deselect icons when clicking desktop background
     const desktop = document.querySelector('.desktop');
     if (desktop) {
         desktop.addEventListener('click', deselectAllIcons);
     }
 }
-
 function selectIcon(icon) {
     deselectAllIcons();
     icon.classList.add('selected');
@@ -476,11 +496,32 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeIconDragging();
 });
 
-function initializeIconDragging() {
+    function initializeIconDragging() {
     const icons = document.querySelectorAll('.icon');
     let draggedIcon = null;
     let offsetX = 0;
     let offsetY = 0;
+    let startX = 0;
+    let startY = 0;
+    let hasMoved = false;
+    const DRAG_THRESHOLD = 5; // pixel — kalau gerak kurang dari ni, dianggap "tap" bukan "drag"
+
+    // Restore saved positions on load (buat DULU sebelum attach event)
+    icons.forEach(icon => {
+        const windowId = icon.getAttribute('data-window');
+        const saved = localStorage.getItem('icon-pos-' + windowId);
+        if (saved) {
+            try {
+                const pos = JSON.parse(saved);
+                if (pos.top && pos.left) {
+                    icon.style.top = pos.top;
+                    icon.style.left = pos.left;
+                }
+            } catch (err) {
+                console.warn('Failed to restore icon position', err);
+            }
+        }
+    });
 
     icons.forEach(icon => {
         icon.addEventListener('mousedown', startIconDrag);
@@ -488,18 +529,18 @@ function initializeIconDragging() {
     });
 
     function startIconDrag(e) {
-         if (e.cancelable) e.preventDefault();
         draggedIcon = e.currentTarget;
-        draggedIcon.classList.add('dragging');
+        hasMoved = false;
 
         const clientX = e.touches ? e.touches[0].clientX : e.clientX;
         const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
+        startX = clientX;
+        startY = clientY;
+
         const rect = draggedIcon.getBoundingClientRect();
         offsetX = clientX - rect.left;
         offsetY = clientY - rect.top;
-
-        e.stopPropagation();
     }
 
     document.addEventListener('mousemove', dragIcon);
@@ -509,30 +550,42 @@ function initializeIconDragging() {
 
     function dragIcon(e) {
         if (!draggedIcon) return;
-        if (e.cancelable) e.preventDefault();
 
         const clientX = e.touches ? e.touches[0].clientX : e.clientX;
         const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
-        const desktop = document.querySelector('.desktop-icons');
-        const desktopRect = desktop.getBoundingClientRect();
+        const distance = Math.sqrt(
+            Math.pow(clientX - startX, 2) + Math.pow(clientY - startY, 2)
+        );
 
-        let newX = clientX - desktopRect.left - offsetX;
-        let newY = clientY - desktopRect.top - offsetY;
+        if (distance > DRAG_THRESHOLD) {
+            if (!hasMoved) {
+                hasMoved = true;
+                draggedIcon.classList.add('dragging');
+            }
+            if (e.cancelable) e.preventDefault();
 
-        newX = Math.max(0, Math.min(newX, desktopRect.width - draggedIcon.offsetWidth));
-        newY = Math.max(0, Math.min(newY, desktopRect.height - draggedIcon.offsetHeight));
+            const desktop = document.querySelector('.desktop-icons');
+            const desktopRect = desktop.getBoundingClientRect();
 
-        draggedIcon.style.left = newX + 'px';
-        draggedIcon.style.top = newY + 'px';
+            let newX = clientX - desktopRect.left - offsetX;
+            let newY = clientY - desktopRect.top - offsetY;
+
+            newX = Math.max(0, Math.min(newX, desktopRect.width - draggedIcon.offsetWidth));
+            newY = Math.max(0, Math.min(newY, desktopRect.height - draggedIcon.offsetHeight));
+
+            draggedIcon.style.left = newX + 'px';
+            draggedIcon.style.top = newY + 'px';
+        }
     }
 
     function stopIconDrag() {
-        if (draggedIcon) {
+        if (draggedIcon && hasMoved) {
             draggedIcon.classList.remove('dragging');
             saveIconPosition(draggedIcon);
         }
         draggedIcon = null;
+        hasMoved = false;
     }
 
     function saveIconPosition(icon) {
@@ -540,18 +593,7 @@ function initializeIconDragging() {
         const position = { top: icon.style.top, left: icon.style.left };
         localStorage.setItem('icon-pos-' + windowId, JSON.stringify(position));
     }
-
-    // Restore saved positions on load
-    icons.forEach(icon => {
-        const windowId = icon.getAttribute('data-window');
-        const saved = localStorage.getItem('icon-pos-' + windowId);
-        if (saved) {
-            const pos = JSON.parse(saved);
-            icon.style.top = pos.top;
-            icon.style.left = pos.left;
-        }
-    });
-}
+    }
 //PLAYGROUND JS
 document.addEventListener('DOMContentLoaded', () => {
     initializeTicTacToe();
