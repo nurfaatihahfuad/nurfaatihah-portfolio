@@ -35,17 +35,13 @@ body {
     font-family: 'MS Sans Serif', 'Tahoma', 'Arial', sans-serif;
     font-size: 11px;
     overflow: hidden;
-    background: linear-gradient(-45deg, #3A6EA5, #1084d0, #000080, #3A6EA5);
-    background-size: 400% 400%;
-    animation: gradientMove 15s ease infinite;
+    background-color: #008080;
+    background-image: 
+        linear-gradient(0deg, transparent 24%, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.05) 26%, transparent 27%, transparent 74%, rgba(255,255,255,0.05) 75%, rgba(255,255,255,0.05) 76%, transparent 77%, transparent),
+        linear-gradient(90deg, transparent 24%, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.05) 26%, transparent 27%, transparent 74%, rgba(255,255,255,0.05) 75%, rgba(255,255,255,0.05) 76%, transparent 77%, transparent);
+    background-size: 20px 20px;
     height: 100vh;
     cursor: default;
-}
-
-@keyframes gradientMove {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
 }
 
 /* ==========================================
