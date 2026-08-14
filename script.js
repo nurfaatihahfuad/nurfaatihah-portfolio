@@ -552,3 +552,219 @@ function initializeIconDragging() {
         }
     });
 }
+//PLAYGROUND JS
+document.addEventListener('DOMContentLoaded', () => {
+    initializeTicTacToe();
+    initializeTypingTest();
+    initializeMediaPlayer();
+    initializeScreensaver();
+});
+
+// ================== TIC TAC TOE ==================
+function initializeTicTacToe() {
+    const cells = document.querySelectorAll('.ttt-cell');
+    const status = document.getElementById('ttt-status');
+    const resetBtn = document.getElementById('ttt-reset');
+    if (!cells.length) return;
+
+    let board = Array(9).fill('');
+    let currentPlayer = 'X';
+    let gameActive = true;
+
+    const winPatterns = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
+    ];
+
+    cells.forEach(cell => {
+        cell.addEventListener('click', () => {
+            const index = parseInt(cell.getAttribute('data-index'));
+            if (!gameActive || board[index] !== '') return;
+
+            board[index] = currentPlayer;
+            cell.textContent = currentPlayer;
+            cell.disabled = true;
+
+            const winner = checkWinner();
+            if (winner) {
+                status.textContent = winner + ' wins!';
+                gameActive = false;
+            } else if (!board.includes('')) {
+                status.textContent = "It's a draw!";
+                gameActive = false;
+            } else {
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                status.textContent = `Your turn (${currentPlayer})`;
+            }
+        });
+    });
+
+    function checkWinner() {
+        for (const pattern of winPatterns) {
+            const [a, b, c] = pattern;
+            if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+                return board[a];
+            }
+        }
+        return null;
+    }
+
+    resetBtn.addEventListener('click', () => {
+        board = Array(9).fill('');
+        currentPlayer = 'X';
+        gameActive = true;
+        status.textContent = 'Your turn (X)';
+        cells.forEach(cell => {
+            cell.textContent = '';
+            cell.disabled = false;
+        });
+    });
+}
+
+// ================== TYPING SPEED TEST ==================
+function initializeTypingTest() {
+    const sampleEl = document.getElementById('typing-sample');
+    const inputEl = document.getElementById('typing-input');
+    const wpmEl = document.getElementById('wpm-result');
+    const accuracyEl = document.getElementById('accuracy-result');
+    const resetBtn = document.getElementById('typing-reset');
+    if (!sampleEl || !inputEl) return;
+
+    const sampleText = sampleEl.textContent;
+    let startTime = null;
+
+    inputEl.addEventListener('input', () => {
+        if (!startTime) startTime = new Date();
+
+        const typedText = inputEl.value;
+        const timeElapsedMinutes = (new Date() - startTime) / 60000;
+
+        const wordsTyped = typedText.trim().split(/\s+/).filter(w => w).length;
+        const wpm = timeElapsedMinutes > 0 ? Math.round(wordsTyped / timeElapsedMinutes) : 0;
+        wpmEl.textContent = wpm;
+
+        let correctChars = 0;
+        for (let i = 0; i < typedText.length; i++) {
+            if (typedText[i] === sampleText[i]) correctChars++;
+        }
+        const accuracy = typedText.length > 0 ? Math.round((correctChars / typedText.length) * 100) : 100;
+        accuracyEl.textContent = accuracy;
+
+        if (typedText === sampleText) {
+            inputEl.disabled = true;
+        }
+    });
+
+    resetBtn.addEventListener('click', () => {
+        inputEl.value = '';
+        inputEl.disabled = false;
+        startTime = null;
+        wpmEl.textContent = '0';
+        accuracyEl.textContent = '100';
+    });
+}
+
+// ================== MEDIA PLAYER ==================
+function initializeMediaPlayer() {
+    const select = document.getElementById('media-select');
+    const playBtn = document.getElementById('media-play');
+    const stopBtn = document.getElementById('media-stop');
+    const display = document.getElementById('media-display');
+    if (!select) return;
+
+    let isPlaying = false;
+    let animationInterval = null;
+
+    const trackNames = {
+        lofi1: 'Lofi Chill Beat',
+        lofi2: 'Retro Synthwave',
+        lofi3: 'Coding Vibes'
+    };
+
+    playBtn.addEventListener('click', () => {
+        const selected = select.value;
+        if (!selected) {
+            display.textContent = 'Please select a track first';
+            return;
+        }
+
+        isPlaying = true;
+        let dots = 0;
+        clearInterval(animationInterval);
+        animationInterval = setInterval(() => {
+            dots = (dots + 1) % 4;
+            display.textContent = `Now playing: ${trackNames[selected]}${'.'.repeat(dots)}`;
+        }, 500);
+    });
+
+    stopBtn.addEventListener('click', () => {
+        isPlaying = false;
+        clearInterval(animationInterval);
+        display.textContent = 'No track selected';
+    });
+}
+
+// ================== SCREENSAVER (IDLE TRIGGER) ==================
+function initializeScreensaver() {
+    let idleTimer = null;
+    const idleDelay = 30000; // 30 saat
+
+    const overlay = document.createElement('div');
+    overlay.className = 'screensaver-overlay';
+    overlay.id = 'screensaver-overlay';
+
+    const logo = document.createElement('div');
+    logo.className = 'screensaver-logo';
+    logo.textContent = 'NURFAATIHAH.EXE';
+    overlay.appendChild(logo);
+
+    document.body.appendChild(overlay);
+
+    let x = 50, y = 50, dx = 2, dy = 2;
+    let animFrame = null;
+
+    function animateLogo() {
+        const maxX = window.innerWidth - logo.offsetWidth;
+        const maxY = window.innerHeight - logo.offsetHeight;
+
+        x += dx;
+        y += dy;
+
+        if (x <= 0 || x >= maxX) dx *= -1;
+        if (y <= 0 || y >= maxY) dy *= -1;
+
+        logo.style.left = x + 'px';
+        logo.style.top = y + 'px';
+
+        animFrame = requestAnimationFrame(animateLogo);
+    }
+
+    function showScreensaver() {
+        overlay.style.display = 'block';
+        animateLogo();
+    }
+
+    function hideScreensaver() {
+        overlay.style.display = 'none';
+        cancelAnimationFrame(animFrame);
+        resetIdleTimer();
+    }
+
+    function resetIdleTimer() {
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(showScreensaver, idleDelay);
+    }
+
+    overlay.addEventListener('click', hideScreensaver);
+    overlay.addEventListener('touchstart', hideScreensaver);
+
+    ['mousemove', 'keydown', 'click', 'touchstart'].forEach(evt => {
+        document.addEventListener(evt, () => {
+            if (overlay.style.display === 'block') return;
+            resetIdleTimer();
+        });
+    });
+
+    resetIdleTimer();
+}
