@@ -560,7 +560,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeScreensaver();
 });
 
-// ================== TIC TAC TOE ==================
+// ================== TIC TAC TOE (VS COMPUTER) ==================
 function initializeTicTacToe() {
     const cells = document.querySelectorAll('.ttt-cell');
     const status = document.getElementById('ttt-status');
@@ -568,8 +568,9 @@ function initializeTicTacToe() {
     if (!cells.length) return;
 
     let board = Array(9).fill('');
-    let currentPlayer = 'X';
     let gameActive = true;
+    const HUMAN = 'X';
+    const COMPUTER = 'O';
 
     const winPatterns = [
         [0,1,2],[3,4,5],[6,7,8],
@@ -582,37 +583,105 @@ function initializeTicTacToe() {
             const index = parseInt(cell.getAttribute('data-index'));
             if (!gameActive || board[index] !== '') return;
 
-            board[index] = currentPlayer;
-            cell.textContent = currentPlayer;
-            cell.disabled = true;
+            makeMove(index, HUMAN);
 
-            const winner = checkWinner();
-            if (winner) {
-                status.textContent = winner + ' wins!';
-                gameActive = false;
-            } else if (!board.includes('')) {
-                status.textContent = "It's a draw!";
-                gameActive = false;
-            } else {
-                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-                status.textContent = `Your turn (${currentPlayer})`;
-            }
+            if (checkGameEnd()) return;
+
+            status.textContent = "Computer's turn...";
+            gameActive = false;
+
+            setTimeout(() => {
+                const bestMove = getBestMove();
+                makeMove(bestMove, COMPUTER);
+                checkGameEnd();
+                if (gameActive || !board.includes('')) return;
+            }, 500);
         });
     });
 
-    function checkWinner() {
+    function makeMove(index, player) {
+        board[index] = player;
+        cells[index].textContent = player;
+        cells[index].disabled = true;
+    }
+
+    function checkGameEnd() {
+        const winner = checkWinner(board);
+        if (winner) {
+            status.textContent = winner === HUMAN ? 'You win! 🎉' : 'Computer wins!';
+            gameActive = false;
+            return true;
+        } else if (!board.includes('')) {
+            status.textContent = "It's a draw!";
+            gameActive = false;
+            return true;
+        } else {
+            gameActive = true;
+            status.textContent = 'Your turn (X)';
+            return false;
+        }
+    }
+
+    function checkWinner(b) {
         for (const pattern of winPatterns) {
-            const [a, b, c] = pattern;
-            if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-                return board[a];
+            const [a, bIdx, c] = pattern;
+            if (b[a] && b[a] === b[bIdx] && b[a] === b[c]) {
+                return b[a];
             }
         }
         return null;
     }
 
+    // Minimax algorithm — computer plays optimally (unbeatable)
+    function getBestMove() {
+        let bestScore = -Infinity;
+        let move = -1;
+
+        for (let i = 0; i < 9; i++) {
+            if (board[i] === '') {
+                board[i] = COMPUTER;
+                const score = minimax(board, 0, false);
+                board[i] = '';
+                if (score > bestScore) {
+                    bestScore = score;
+                    move = i;
+                }
+            }
+        }
+        return move;
+    }
+
+    function minimax(b, depth, isMaximizing) {
+        const winner = checkWinner(b);
+        if (winner === COMPUTER) return 10 - depth;
+        if (winner === HUMAN) return depth - 10;
+        if (!b.includes('')) return 0;
+
+        if (isMaximizing) {
+            let best = -Infinity;
+            for (let i = 0; i < 9; i++) {
+                if (b[i] === '') {
+                    b[i] = COMPUTER;
+                    best = Math.max(best, minimax(b, depth + 1, false));
+                    b[i] = '';
+                }
+            }
+            return best;
+        } else {
+            let best = Infinity;
+            for (let i = 0; i < 9; i++) {
+                if (b[i] === '') {
+                    b[i] = HUMAN;
+                    best = Math.min(best, minimax(b, depth + 1, true));
+                    b[i] = '';
+                }
+            }
+            return best;
+        }
+    }
+
     resetBtn.addEventListener('click', () => {
         board = Array(9).fill('');
-        currentPlayer = 'X';
         gameActive = true;
         status.textContent = 'Your turn (X)';
         cells.forEach(cell => {
@@ -621,7 +690,6 @@ function initializeTicTacToe() {
         });
     });
 }
-
 // ================== TYPING SPEED TEST ==================
 function initializeTypingTest() {
     const sampleEl = document.getElementById('typing-sample');
@@ -665,7 +733,24 @@ function initializeTypingTest() {
     });
 }
 
-// ================== MEDIA PLAYER ==================
+// ================== MEDIA PLAYER (YOUTUBE EMBED) ==================
+let ytPlayer = null;
+let ytApiReady = false;
+
+function loadYouTubeAPI() {
+    if (window.YT) {
+        ytApiReady = true;
+        return;
+    }
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
+
+    window.onYouTubeIframeAPIReady = function () {
+        ytApiReady = true;
+    };
+}
+
 function initializeMediaPlayer() {
     const select = document.getElementById('media-select');
     const playBtn = document.getElementById('media-play');
@@ -673,34 +758,42 @@ function initializeMediaPlayer() {
     const display = document.getElementById('media-display');
     if (!select) return;
 
-    let isPlaying = false;
-    let animationInterval = null;
+    loadYouTubeAPI();
 
     const trackNames = {
-        lofi1: 'Lofi Chill Beat',
-        lofi2: 'Retro Synthwave',
-        lofi3: 'Coding Vibes'
+        jfKfPfyJRdk: 'Lofi Girl - Lofi Hip Hop Radio',
+        '4xDzrJKXOOY': 'Synthwave Radio',
+        '5qap5aO4i9A': 'Lofi Coding Beats'
     };
 
     playBtn.addEventListener('click', () => {
-        const selected = select.value;
-        if (!selected) {
+        const videoId = select.value;
+        if (!videoId) {
             display.textContent = 'Please select a track first';
             return;
         }
 
-        isPlaying = true;
-        let dots = 0;
-        clearInterval(animationInterval);
-        animationInterval = setInterval(() => {
-            dots = (dots + 1) % 4;
-            display.textContent = `Now playing: ${trackNames[selected]}${'.'.repeat(dots)}`;
-        }, 500);
+        display.textContent = `Now playing: ${trackNames[videoId]}`;
+
+        if (!ytPlayer) {
+            ytPlayer = new YT.Player('youtube-player', {
+                height: '160',
+                width: '100%',
+                videoId: videoId,
+                playerVars: { autoplay: 1 },
+                events: {
+                    onReady: (e) => e.target.playVideo()
+                }
+            });
+        } else {
+            ytPlayer.loadVideoById(videoId);
+        }
     });
 
     stopBtn.addEventListener('click', () => {
-        isPlaying = false;
-        clearInterval(animationInterval);
+        if (ytPlayer && ytPlayer.stopVideo) {
+            ytPlayer.stopVideo();
+        }
         display.textContent = 'No track selected';
     });
 }
