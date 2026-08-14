@@ -473,3 +473,82 @@ function showFormPopup(type) {
 
     popup.style.zIndex = ++zIndexCounter;
 }
+document.addEventListener('DOMContentLoaded', () => {
+    initializeIconDragging();
+});
+
+function initializeIconDragging() {
+    const icons = document.querySelectorAll('.icon');
+    let draggedIcon = null;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    icons.forEach(icon => {
+        icon.addEventListener('mousedown', startIconDrag);
+        icon.addEventListener('touchstart', startIconDrag, { passive: false });
+    });
+
+    function startIconDrag(e) {
+        draggedIcon = e.currentTarget;
+        draggedIcon.classList.add('dragging');
+
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+        const rect = draggedIcon.getBoundingClientRect();
+        offsetX = clientX - rect.left;
+        offsetY = clientY - rect.top;
+
+        e.stopPropagation();
+    }
+
+    document.addEventListener('mousemove', dragIcon);
+    document.addEventListener('touchmove', dragIcon, { passive: false });
+    document.addEventListener('mouseup', stopIconDrag);
+    document.addEventListener('touchend', stopIconDrag);
+
+    function dragIcon(e) {
+        if (!draggedIcon) return;
+        if (e.cancelable) e.preventDefault();
+
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+        const desktop = document.querySelector('.desktop-icons');
+        const desktopRect = desktop.getBoundingClientRect();
+
+        let newX = clientX - desktopRect.left - offsetX;
+        let newY = clientY - desktopRect.top - offsetY;
+
+        newX = Math.max(0, Math.min(newX, desktopRect.width - draggedIcon.offsetWidth));
+        newY = Math.max(0, Math.min(newY, desktopRect.height - draggedIcon.offsetHeight));
+
+        draggedIcon.style.left = newX + 'px';
+        draggedIcon.style.top = newY + 'px';
+    }
+
+    function stopIconDrag() {
+        if (draggedIcon) {
+            draggedIcon.classList.remove('dragging');
+            saveIconPosition(draggedIcon);
+        }
+        draggedIcon = null;
+    }
+
+    function saveIconPosition(icon) {
+        const windowId = icon.getAttribute('data-window');
+        const position = { top: icon.style.top, left: icon.style.left };
+        localStorage.setItem('icon-pos-' + windowId, JSON.stringify(position));
+    }
+
+    // Restore saved positions on load
+    icons.forEach(icon => {
+        const windowId = icon.getAttribute('data-window');
+        const saved = localStorage.getItem('icon-pos-' + windowId);
+        if (saved) {
+            const pos = JSON.parse(saved);
+            icon.style.top = pos.top;
+            icon.style.left = pos.left;
+        }
+    });
+}
