@@ -35,9 +35,17 @@ body {
     font-family: 'MS Sans Serif', 'Tahoma', 'Arial', sans-serif;
     font-size: 11px;
     overflow: hidden;
-    background: var(--desktop-bg);
+    background: linear-gradient(-45deg, #3A6EA5, #1084d0, #000080, #3A6EA5);
+    background-size: 400% 400%;
+    animation: gradientMove 15s ease infinite;
     height: 100vh;
     cursor: default;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 /* ==========================================
