@@ -36,14 +36,6 @@ body {
     font-size: 11px;
     overflow: hidden;
     background: var(--desktop-bg);
-    background-image: 
-        repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 2px,
-            rgba(255, 255, 255, 0.03) 2px,
-            rgba(255, 255, 255, 0.03) 4px
-        );
     height: 100vh;
     cursor: default;
 }
@@ -61,14 +53,14 @@ body {
 /* Desktop Icons Grid */
 .desktop-icons {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 80px);
-    grid-auto-rows: 80px;
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, 110px);
+    grid-auto-rows: 110px;
+    gap: 25px;
     align-content: start;
 }
 
 .icon {
-    width: 120px;
+    width: 150px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -89,8 +81,8 @@ body {
 }
 
 .icon-image {
-    width: 32px;
-    height: 32px;
+    width: 48px;
+    height: 48px;
     margin-bottom: 5px;
     filter: drop-shadow(1px 1px 0px rgba(0, 0, 0, 0.5));
 }
@@ -98,10 +90,10 @@ body {
 .icon-label {
     color: var(--win95-white);
     text-align: center;
-    font-size: 11px;
+    font-size: 13px;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
     word-wrap: break-word;
-    max-width: 70px;
+    max-width: 90px;
 }
 
 /* ==========================================
@@ -337,7 +329,7 @@ li {
 }
 
 .project-icon {
-    font-size: 32px;
+    font-size: 48px;
     margin-bottom: 10px;
 }
 
@@ -733,8 +725,8 @@ li {
     }
     
     .desktop-icons {
-        grid-template-columns: repeat(4, 70px);
-        gap: 15px;
+        grid-template-columns: repeat(4, 90px);
+        gap: 18px;
     }
     
     .project-grid {
@@ -756,7 +748,7 @@ li {
     }
     
     .desktop-icons {
-        grid-template-columns: repeat(3, 70px);
+        grid-template-columns: repeat(3, 85px);
     }
     
     .art-gallery {
@@ -786,29 +778,4 @@ li {
 
 .window {
     animation: windowOpen 0.2s ease-out;
-}
-
-/* CRT Screen Effect (Optional) */
-@keyframes flicker {
-    0% { opacity: 0.97; }
-    50% { opacity: 1; }
-    100% { opacity: 0.97; }
-}
-
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: linear-gradient(
-        rgba(18, 16, 16, 0) 50%,
-        rgba(0, 0, 0, 0.25) 50%
-    );
-    background-size: 100% 4px;
-    pointer-events: none;
-    z-index: 9999;
-    animation: flicker 0.15s infinite;
-    opacity: 0.05;
 }
