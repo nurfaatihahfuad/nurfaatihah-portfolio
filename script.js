@@ -28,42 +28,36 @@ document.addEventListener('DOMContentLoaded', () => {
 // ==========================================
 function initializeIcons() {
     const icons = document.querySelectorAll('.icon');
-    let lastTappedIcon = null;
-    let lastTapTime = 0;
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
     icons.forEach(icon => {
-        // Desktop: single click to select
-        icon.addEventListener('click', (e) => {
-            e.stopPropagation();
-            selectIcon(icon);
-        });
-
-        // Desktop: double click to open window
-        icon.addEventListener('dblclick', (e) => {
-            e.stopPropagation();
-            const windowId = icon.getAttribute('data-window');
-            if (windowId) openWindow(windowId);
-        });
-
-        // Mobile: tap-tap (double tap) to open window
-        icon.addEventListener('touchend', (e) => {
-            const currentTime = new Date().getTime();
-            const tapGap = currentTime - lastTapTime;
-
-            if (lastTappedIcon === icon && tapGap < 400 && tapGap > 0) {
-                // Double-tap detected
+        if (isTouchDevice) {
+            // MOBILE: single tap to open window directly
+            icon.addEventListener('touchend', (e) => {
+                if (icon.dataset.wasDragged === 'true') {
+                    icon.dataset.wasDragged = 'false';
+                    return;
+                }
                 e.preventDefault();
+                e.stopPropagation();
+                selectIcon(icon);
                 const windowId = icon.getAttribute('data-window');
                 if (windowId) openWindow(windowId);
-                lastTappedIcon = null;
-                lastTapTime = 0;
-            } else {
-                // Single tap - select
+            });
+        } else {
+            // DESKTOP: single click to select
+            icon.addEventListener('click', (e) => {
+                e.stopPropagation();
                 selectIcon(icon);
-                lastTappedIcon = icon;
-                lastTapTime = currentTime;
-            }
-        });
+            });
+
+            // DESKTOP: double click to open window
+            icon.addEventListener('dblclick', (e) => {
+                e.stopPropagation();
+                const windowId = icon.getAttribute('data-window');
+                if (windowId) openWindow(windowId);
+            });
+        }
     });
 
     const desktop = document.querySelector('.desktop');
@@ -71,6 +65,7 @@ function initializeIcons() {
         desktop.addEventListener('click', deselectAllIcons);
     }
 }
+
 function selectIcon(icon) {
     deselectAllIcons();
     icon.classList.add('selected');
@@ -91,12 +86,10 @@ function initializeWindows() {
     windows.forEach(win => {
         const titleBar = win.querySelector('.title-bar');
         if (titleBar) {
-            // Mouse & Touch events for dragging
             titleBar.addEventListener('mousedown', startDragging);
             titleBar.addEventListener('touchstart', startDragging, { passive: false });
         }
 
-        // Window control buttons
         const minimizeBtn = win.querySelector('.minimize-btn');
         const maximizeBtn = win.querySelector('.maximize-btn');
         const closeBtn = win.querySelector('.close-btn');
@@ -105,12 +98,10 @@ function initializeWindows() {
         if (maximizeBtn) maximizeBtn.addEventListener('click', (e) => { e.stopPropagation(); maximizeWindow(win); });
         if (closeBtn) closeBtn.addEventListener('click', (e) => { e.stopPropagation(); closeWindow(win); });
 
-        // Bring window to front on click/tap
         win.addEventListener('mousedown', () => bringToFront(win));
         win.addEventListener('touchstart', () => bringToFront(win), { passive: true });
     });
 
-    // Global drag tracking
     document.addEventListener('mousemove', drag);
     document.addEventListener('touchmove', drag, { passive: false });
     document.addEventListener('mouseup', stopDragging);
@@ -373,15 +364,6 @@ function updateClock() {
     clockElement.textContent = `${hours}:${minutes} ${ampm}`;
 }
 
-function handleContactSubmit(e) {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const name = formData.get('name') || 'Friend';
-
-    alert(`Thanks for reaching out, ${name}! Message received.`);
-    e.target.reset();
-}
-
 // Prevent text selection while dragging windows
 document.addEventListener('selectstart', (e) => {
     if (isDragging) e.preventDefault();
@@ -404,7 +386,6 @@ window.addEventListener('resize', () => {
 });
 
 // Global exports
-window.handleContactSubmit = handleContactSubmit;
 window.openAllWindows = openAllWindows;
 window.closeAllWindows = closeAllWindows;
 
@@ -416,7 +397,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!contactForm) return;
 
     contactForm.addEventListener('submit', function (e) {
-        e.preventDefault(); // stop default redirect to Formspree thank-you page
+        e.preventDefault();
 
         const submitBtn = contactForm.querySelector('button[type="submit"]');
         const originalBtnText = submitBtn ? submitBtn.textContent : '';
@@ -492,11 +473,15 @@ function showFormPopup(type) {
 
     popup.style.zIndex = ++zIndexCounter;
 }
+
+// ==========================================
+// ICON DRAG & DROP
+// ==========================================
 document.addEventListener('DOMContentLoaded', () => {
     initializeIconDragging();
 });
 
-    function initializeIconDragging() {
+function initializeIconDragging() {
     const icons = document.querySelectorAll('.icon');
     let draggedIcon = null;
     let offsetX = 0;
@@ -504,9 +489,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let startX = 0;
     let startY = 0;
     let hasMoved = false;
-    const DRAG_THRESHOLD = 5; // pixel — kalau gerak kurang dari ni, dianggap "tap" bukan "drag"
+    const DRAG_THRESHOLD = 5;
 
-    // Restore saved positions on load (buat DULU sebelum attach event)
+    // Restore saved positions on load
     icons.forEach(icon => {
         const windowId = icon.getAttribute('data-window');
         const saved = localStorage.getItem('icon-pos-' + windowId);
@@ -582,6 +567,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function stopIconDrag() {
         if (draggedIcon && hasMoved) {
             draggedIcon.classList.remove('dragging');
+            draggedIcon.dataset.wasDragged = 'true';
             saveIconPosition(draggedIcon);
         }
         draggedIcon = null;
@@ -593,8 +579,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const position = { top: icon.style.top, left: icon.style.left };
         localStorage.setItem('icon-pos-' + windowId, JSON.stringify(position));
     }
-    }
-//PLAYGROUND JS
+}
+
+// ==========================================
+// PLAYGROUND
+// ==========================================
 document.addEventListener('DOMContentLoaded', () => {
     initializeTicTacToe();
     initializeTypingTest();
@@ -636,7 +625,6 @@ function initializeTicTacToe() {
                 const bestMove = getBestMove();
                 makeMove(bestMove, COMPUTER);
                 checkGameEnd();
-                if (gameActive || !board.includes('')) return;
             }, 500);
         });
     });
@@ -674,7 +662,6 @@ function initializeTicTacToe() {
         return null;
     }
 
-    // Minimax algorithm — computer plays optimally (unbeatable)
     function getBestMove() {
         let bestScore = -Infinity;
         let move = -1;
@@ -732,6 +719,7 @@ function initializeTicTacToe() {
         });
     });
 }
+
 // ================== TYPING SPEED TEST ==================
 function initializeTypingTest() {
     const sampleEl = document.getElementById('typing-sample');
@@ -843,7 +831,7 @@ function initializeMediaPlayer() {
 // ================== SCREENSAVER (IDLE TRIGGER) ==================
 function initializeScreensaver() {
     let idleTimer = null;
-    const idleDelay = 30000; // 30 saat
+    const idleDelay = 30000;
 
     const overlay = document.createElement('div');
     overlay.className = 'screensaver-overlay';
